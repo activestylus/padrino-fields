@@ -15,8 +15,8 @@ Jeweler::Tasks.new do |gem|
   gem.name = "padrino-fields"
   gem.homepage = "http://github.com/activestylus/padrino-fields"
   gem.license = "MIT"
-  gem.summary = %Q{TODO: one-line summary of your gem}
-  gem.description = %Q{TODO: longer description of your gem}
+  gem.summary = %Q{Advanced form helpers for Padrino framework}
+  gem.description = %Q{Smart fields for your forms, similar to Formtastic or SimpleForm}
   gem.email = "stevendgarcia@gmail.com"
   gem.authors = ["Steven Garcia"]
   # Include your dependencies below. Runtime dependencies are required when using your gem,
