@@ -134,7 +134,7 @@ Require your orm file and include its module as follows:
         module FormBuilder
           class FieldsFormBuilder < AbstractFormBuilder #:nodoc:
         
-            include **PadrinoFields**::MyCoolOrm if defined?(MyCoolOrm)
+            include PadrinoFields::MyCoolOrm if defined?(MyCoolOrm)
 
 ## Todo
 
