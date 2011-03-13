@@ -102,7 +102,7 @@ Options may also be rendered as **:radios** and **:checks**
 
 You can override a few default settings by creating a lib file as follows:
 
-    **PadrinoFields**::Settings.configure do |config|
+    PadrinoFields::Settings.configure do |config|
       
       config.container = :p
       # Tag which wraps the inputs and labels
