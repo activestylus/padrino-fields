@@ -80,6 +80,7 @@ By default all inputs are optional. **PadrinoFields** looks at your model valida
     # app/views/people/_form.haml
     = f.input :name
     
+    => <label><abbr>*<abbr>Name</label><input ...
 
 You can also do it manually with the **:required** option
 
