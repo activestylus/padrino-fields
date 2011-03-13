@@ -21,7 +21,7 @@ Initialize it in your **app.rb**
     
     set :default_builder, 'PadrinoFields'
 
-## Basic Usage
+## Usage
 
 The heart of **PadrinoFields** is the **:input** method
 
@@ -32,7 +32,7 @@ The heart of **PadrinoFields** is the **:input** method
 
 This will generate a form with labels for username and password - supplying the appropriate inputs, labels and error messages on missing/invalid fields. **PadrinoFields** looks at your database columns to generate default inputs.
 
-## Field Customization
+### Field Customization
 
 Override the default input type like so:
 
@@ -57,7 +57,7 @@ Pass html attribute straight to the input:
     = f.input :password, :input_html => { :maxlength => 20 }
     = f.input :remember_me, :input_html => { :value => '1' }
 
-## Available Inputs
+### Available Inputs
 
 Mapping       | Input           | Column Type                          
 :-------------|:----------------|:------------------------------------
@@ -77,7 +77,7 @@ Mapping       | Input           | Column Type
 **:checks**   |check boxes      |-                                    
 
 
-## Validations
+### Validations
 
 By default all inputs are optional. **PadrinoFields** looks at your model validations to see if a field's presence is required and will mark it by prepending a * to the label. 
 
@@ -94,7 +94,7 @@ You can also do it manually with the **:required** option
 
     = f.input :email, :required => true
 
-## Options / Collections
+### Options / Collections
 
 Options can be arrays or ranges, and when a **:options** is given the **:select** input will be rendered by default, so we don't need to pass the **:as => :select** option. 
 
@@ -108,7 +108,7 @@ Options may also be rendered as **:radios** and **:checks**
 
     = f.input :user, :options => User.all.map(&:name), :as => :radios
 
-## Settings
+### Settings
 
 You can override a few default settings by creating a lib file as follows:
 
