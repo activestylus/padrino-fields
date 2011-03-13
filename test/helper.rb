@@ -56,7 +56,7 @@ class Test::Unit::TestCase
   end
   
   def field(object=Person.new)
-    Padrino::Helpers::FormBuilder::PadrinoFields.new(self, object)
+    Padrino::Helpers::FormBuilder::PadrinoFieldsBuilder.new(self, object)
   end
   
   Webrat.configure do |config|
@@ -121,7 +121,7 @@ module Webrat
   end
 end
 
-class Padrino::Helpers::FormBuilder::PadrinoFields
+class Padrino::Helpers::FormBuilder::PadrinoFieldsBuilder
   
   public :setup_label, :hint, :default_radios, :domize
   

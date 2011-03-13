@@ -6,7 +6,7 @@ require File.expand_path(File.dirname(__FILE__) + '/settings')
 module Padrino
   module Helpers
     module FormBuilder #:nodoc:
-      class PadrinoFields < AbstractFormBuilder #:nodoc:
+      class PadrinoFieldsBuilder < AbstractFormBuilder #:nodoc:
         
         include PadrinoFields::Settings
         include PadrinoFields::DataMapperWrapper if defined?(DataMapper)
@@ -61,6 +61,13 @@ module Padrino
             @template.#{type}_field_tag(field_name(field), options)
           end
           EOF
+        end
+
+        def grouped_options(collection)
+          collection.map do |optgroup|
+            optgroup.map do |option|
+            end
+          end
         end
 
         protected
