@@ -6,7 +6,7 @@ require File.expand_path(File.dirname(__FILE__) + '/settings')
 module Padrino
   module Helpers
     module FormBuilder #:nodoc:
-      class FieldsFormBuilder < AbstractFormBuilder #:nodoc:
+      class PadrinoFields < AbstractFormBuilder #:nodoc:
         
         include PadrinoFields::Settings
         include PadrinoFields::DataMapperWrapper if defined?(DataMapper)

@@ -13,6 +13,13 @@ Install the gem:
 Add it to your Gemfile:
 
     gem "padrino-fields"
+    
+
+Initialize it in your **app.rb**
+
+    register PadrinoFields
+    
+    set :default_builder, 'PadrinoFields'
 
 ## Basic Usage
 
@@ -135,7 +142,7 @@ Require your orm file and include its module as follows:
     module Padrino
       module Helpers
         module FormBuilder
-          class FieldsFormBuilder < AbstractFormBuilder #:nodoc:
+          class PadrinoFields < AbstractFormBuilder #:nodoc:
         
             include PadrinoFields::MyCoolOrm if defined?(MyCoolOrm)
 

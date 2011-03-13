@@ -21,7 +21,7 @@ module PadrinoFields
     class << self
       def registered(app)
         app.set :default_builder, 'StandardFormBuilder'
-        app.helpers Padrino::Helpers::FormBuilder::FieldsFormBuilder
+        app.helpers Padrino::Helpers::FormBuilder::PadrinoFields
         rescue
       end
       alias :included :registered
