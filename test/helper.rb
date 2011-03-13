@@ -36,11 +36,11 @@ rescue LoadError
   require 'active_support/time'
 end
 
-require File.expand_path(File.dirname(__FILE__) + '/fixtures/markup_app/app')
+require File.expand_path(File.dirname(__FILE__) + '/fixtures/datamapper/app')
 require File.expand_path("../padrino-fields/lib/padrino-fields")
 
 class Test::Unit::TestCase
-  include Padrino::Fields::Settings
+  include PadrinoFields::Settings
   include Padrino::Helpers::FormHelpers
   include Padrino::Helpers::OutputHelpers
   include Padrino::Helpers::TagHelpers
@@ -52,7 +52,7 @@ class Test::Unit::TestCase
   include Webrat::Matchers
 
   def app
-    MarkupDemo.tap { |app| app.set :environment, :test }
+    DataMapperDemo.tap { |app| app.set :environment, :test }
   end
   
   def field(object=Person.new)
@@ -123,6 +123,6 @@ end
 
 class Padrino::Helpers::FormBuilder::FieldsFormBuilder
   
-  public :setup_label, :hint_tag
+  public :setup_label, :hint, :default_radios, :domize
   
 end

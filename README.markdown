@@ -1,367 +1,161 @@
-== PadrinoFields
+# PadrinoFields
 
-Forms made easy for the Padrino Framework (the what now?)
+Forms made easy for the **[Padrino Framework](http://www.padrinorb.com)**
 
-Takes the pain out of building forms. Generates inputs, labels and field hints with a minimal and flexible DSL. Built for Padrino Datamapper stack, though more ORMs can be easily supported due to modular design. Inspired by SimpleForm and Formtastic.
+Takes the pain out of building forms. Generates inputs, labels and field hints with a minimal and flexible DSL. Currently only supports **[DataMapper](http://datamapper.org/)**, but plugging more ORMs in will be trivial due to modular design (See below)
 
-== Installation
+## Installation
 
 Install the gem:
 
-  gem install padrino-fields
+    gem install padrino-fields
 
 Add it to your Gemfile:
 
-  gem "padrino-fields"
+    gem "padrino-fields"
 
-== Usage
+## Basic Usage
 
-As easy as it gets. Use the #input helper and PadrinoFields will figure out what type of column is specified and respond accordingly
+The heart of **PadrinoFields** is the **:input** method
 
-  - form_for @user do |f|
-    = f.input :username
-    = f.submit
+    - form_for @user do |f|
+      = f.input :username
+      = f.input :password
+      = f.submit
 
-This will generate an entire form with labels for user name and password as well, and render errors by default when you render the form with invalid data (after submitting for example).
+This will generate a form with labels for username and password - supplying the appropriate inputs, labels and error messages on missing/invalid fields. **PadrinoFields** looks at your database columns to generate default inputs.
 
-You can overwrite the default label by passing it to the input method, add a hint or even a placeholder:
+## Available Inputs
 
-  <%= padrino-fields_for @user do |f| %>
-    <%= f.input :username, :label => 'Your username please' %>
-    <%= f.input :password, :hint => 'No special characters.' %>
-    <%= f.input :email, :placeholder => 'user@domain.com' %>
-    <%= f.button :submit %>
-  <% end %>
+| Mapping       | Input            | Column Type                          |
+|:--------------|:-----------------|:-------------------------------------|
+| **:boolean**  | check box        | boolean                              |
+| **:string**   | text field       | string                               |
+| **:email**    | email field      | string with name matching "email"    |
+| **:url**      | url field        | string with name matching "url"      |
+| **:tel**      | tel field        | string with name matching "phone"    |
+| **:password** | password field   | string with name matching "password" |
+| **:search**   | search           | string with name matching "search"   |
+| **:text**     | text area        | text                                 |
+| **:file**     | file field       | string, responding to file methods   |
+| **:number**   | number field     | integer, float, decimal              |
+| **:date**     | date field       | date, datetime, timestamps           |
+| **:select**   | select           | -                                    |
+| **:radios**   | radio buttons    | -                                    |
+| **:checks**   | check boxes      | -                                    |
 
-You can also disable labels, hints or error or configure the html of any of them:
+## Field Customization
 
-  <%= padrino-fields_for @user do |f| %>
-    <%= f.input :username, :label_html => { :class => 'my_class' } %>
-    <%= f.input :password, :hint => false, :error_html => { :id => "password_error"} %>
-    <%= f.input :password_confirmation, :label => false %>
-    <%= f.button :submit %>
-  <% end %>
+Override the default input type like so:
 
-It is also possible to pass any html attribute straight to the input, by using the :input_html option, for instance:
+    = f.input :description, :as => :text
+    = f.input :joined_on,   :as => :string
+    = f.accept_terms,       :as => :boolean
 
-  <%= padrino-fields_for @user do |f| %>
-    <%= f.input :username, :input_html => { :class => 'special' } %>
-    <%= f.input :password, :input_html => { :maxlength => 20 } %>
-    <%= f.input :remember_me, :input_html => { :value => '1' } %>
-    <%= f.button :submit %>
-  <% end %>
+Add custom label text, field hints and more:
 
-By default all inputs are required, which means an * is prepended to the label, but you can disable it in any input you want:
+    = f.input :username, :caption => 'You will login with this name'
+    = f.input :password, :hint => 'Letters and numbers only'
 
-  <%= padrino-fields_for @user do |f| %>
-    <%= f.input :name, :required => false %>
-    <%= f.input :username %>
-    <%= f.input :password %>
-    <%= f.button :submit %>
-  <% end %>
+Disable labels, hints or errors:
 
-SimpleForm also lets you overwrite the default input type it creates:
+    = f.input :username, :caption => false
+    = f.input :password, :hint => false
+    = f.input :email, :disabled => true
 
-  <%= padrino-fields_for @user do |f| %>
-    <%= f.input :username %>
-    <%= f.input :password %>
-    <%= f.input :description, :as => :text %>
-    <%= f.input :accepts,     :as => :radio %>
-    <%= f.button :submit %>
-  <% end %>
+Pass html attribute straight to the input:
 
-So instead of a checkbox for the :accepts attribute, you'll have a pair of radio buttons with yes/no labels and a text area instead of a text field for the description. You can also render boolean attributes using :as => :select to show a dropdown.
+    = f.input :username, :input_html => { :class => 'special' }
+    = f.input :password, :input_html => { :maxlength => 20 }
+    = f.input :remember_me, :input_html => { :value => '1' }
 
-It is also possible to give the :disabled option to SimpleForm, and it'll automatically mark the wrapper as disabled with a css class, so you can style labels, hints and other components inside the wrapper as well:
+## Validations
 
-  <%= padrino-fields_for @user do |f| %>
-    <%= f.input :username, :disabled => true, :hint => "You cannot change your username." %>
-    <%= f.button :submit %>
-  <% end %>
+By default all inputs are optional. **PadrinoFields** looks at your model validations to see if a field's presence is required and will mark it by prepending a * to the label. 
 
-SimpleForm accepts same options as their corresponding input type helper in Rails:
+    # app/models/person.rb
+    class Person
+      validates_presence_of :name
+    
+    # app/views/people/_form.haml
+    = f.input :name
+    
 
-  <%= padrino-fields_for @user do |f| %>
-    <%= f.input :date_of_birth, :as => :date, :start_year => Date.today.year - 90,
-                                :end_year => Date.today.year - 12, :discard_day => true,
-                                :order => [:month, :year] %>
-    <%= f.button :submit %>
-  <% end %>
+You can also do it manually with the **:required** option
 
-SimpleForm also allows you using label, hint and error helpers it provides:
+    = f.input :email, :required => true
 
-  <%= padrino-fields_for @user do |f| %>
-    <%= f.label :username %>
-    <%= f.text_field :username %>
-    <%= f.error :username, :id => 'user_name_error' %>
-    <%= f.hint 'No special characters, please!' %>
-    <%= f.submit 'Save' %>
-  <% end %>
+## Options / Collections
 
-Any extra option passed to label, hint or error will be rendered as html option.
+Options can be arrays or ranges, and when a **:options** is given the **:select** input will be rendered by default, so we don't need to pass the **:as => :select** option. 
 
-=== Collections
+    = f.input :user, :options => User.all.map(&:name)
 
-And what if you want to create a select containing the age from 18 to 60 in your form? You can do it overriding the :collection option:
+Use ranges as options for your select tags
 
-  <%= padrino-fields_for @user do |f| %>
-    <%= f.input :user %>
-    <%= f.input :age, :collection => 18..60 %>
-    <%= f.button :submit %>
-  <% end %>
+    = f.input :year, :options => (1950..Time.now.year)
 
-Collections can be arrays or ranges, and when a :collection is given the :select input will be rendered by default, so we don't need to pass the :as => :select option. Other types of collection are :radio and :check_boxes. Those are added by SimpleForm to Rails set of form helpers (read Extra Helpers session below for more information).
+Options may also be rendered as **:radios** and **:checks**
 
-Collection inputs accepts two other options beside collections:
+## Settings
 
-* label_method => the label method to be applied to the collection to retrieve the label
+You can override a few default settings by creating a lib file as follows:
 
-* value_method => the value method to be applied to the collection to retrieve the value
-
-Those methods are useful to manipulate the given collection. Both of these options also except lambda/procs incase you want to calculate the value or label in a special way eg. custom translation. All other options given are sent straight to the underlying helper. For example, you can give prompt as:
-
-  f.input :age, :collection => 18..60, :prompt => "Select your age"
-
-=== Priority
-
-SimpleForm also supports :time_zone and :country. When using such helpers, you can give :priority as option to select which time zones and/or countries should be given higher priority:
-
-  f.input :residence_country, :priority => [ "Brazil" ]
-  f.input :time_zone, :priority => /US/
-
-Those values can also be configured with a default value to be used site use through the SimpleForm.country_priority and SimpleForm.time_zone_priority helpers.
-
-=== Wrapper
-
-SimpleForm allows you to add a wrapper which contains the label, error, hint and input.
-The first step is to configure a wrapper tag:
-
-  SimpleForm.wrapper_tag = :p
-
-And now, you don't need to wrap your f.input calls anymore:
-
-  <%= padrino-fields_for @user do |f| %>
-    <%= f.input :username %>
-    <%= f.input :password %>
-    <%= f.button :submit %>
-  <% end %>
-
-== Associations
-
-To deal with associations, SimpleForm can generate select inputs, a series of radios or check boxes. Lets see how it works: imagine you have a user model that belongs to a company and has_and_belongs_to_many roles. The structure would be something like:
-
-  class User < ActiveRecord::Base
-    belongs_to :company
-    has_and_belongs_to_many :roles
-  end
-
-  class Company < ActiveRecord::Base
-    has_many :users
-  end
-
-  class Role < ActiveRecord::Base
-    has_and_belongs_to_many :users
-  end
-
-Now we have the user form:
-
-  <%= padrino-fields_for @user do |f| %>
-    <%= f.input :name %>
-    <%= f.association :company %>
-    <%= f.association :roles %>
-    <%= f.button :submit %>
-  <% end %>
-
-Simple enough right? This is going to render a :select input for choosing the :company, and another :select input with :multiple option for the :roles. You can of course change it, to use radios and check boxes as well:
-
-  f.association :company, :as => :radio
-  f.association :roles,   :as => :check_boxes
-
-The association helper just invokes input under the hood, so all options available to :select, :radio and :check_boxes are also available to association. Additionally, you can specify the collection by hand, all together with the prompt:
-
-  f.association :company, :collection => Company.active.all(:order => 'name'), :prompt => "Choose a Company"
-
-== Buttons
-
-All web forms need buttons, right? SimpleForm wraps them in the DSL, acting like a proxy:
-
-  <%= padrino-fields_for @user do |f| %>
-    <%= f.input :name %>
-    <%= f.button :submit %>
-  <% end %>
-
-The above will simply call submit. You choose to use it or not, it's just a question of taste.
-
-== Extra helpers
-
-SimpleForm also comes with some extra helpers you can use inside rails default forms without relying on padrino-fields_for helper. They are listed below.
-
-=== Simple Fields For
-
-Wrapper to use simple form inside a default rails form
-
-  form_for @user do |f|
-    f.simple_fields_for :posts do |posts_form|
-      # Here you have all padrino-fields methods available
-      posts_form.input :title
+    **PadrinoFields**::Settings.configure do |config|
+      
+      config.container = :p
+      # Tag which wraps the inputs and labels
+      
+      config.label_required_marker = "<abbr>*</abbr>"
+      # Visual indicator of a required field
+      
+      config.label_required_marker_position = :prepend
+      # Placement of marker, either :append or :prepend (default)
+      
     end
-  end
 
-=== Collection Radio
 
-Creates a collection of radio inputs with labels associated (same API as collection_select):
+## ORM Support
 
-  form_for @user do |f|
-    f.collection_radio :options, [[true, 'Yes'] ,[false, 'No']], :first, :last
-  end
+So far only Datamapper is supported, but since the code is decoupled it should be relatively easy to support others:
 
-  <input id="user_options_true" name="user[options]" type="radio" value="true" />
-  <label class="collection_radio" for="user_options_true">Yes</label>
-  <input id="user_options_false" name="user[options]" type="radio" value="false" />
-  <label class="collection_radio" for="user_options_false">No</label>
+1. Clone **padrino-fields/orms/datamapper.rb** and extend your ORM in a similar fashion
+2. Clone **test/fixtures/datamapper** and substitute the models with your ORM
+3. Clone **test/test_datamapper.rb** to write tests
+4. Open **lib/padrino-fields/form_builder.rb**
 
-=== Collection Check Box
+Require your orm file and include its module as follows:
 
-Creates a collection of check boxes with labels associated (same API as collection_select):
+    require File.expand_path(File.dirname(__FILE__) + '/orms/mycoolorm') if defined?(MyCoolOrm)
 
-  form_for @user do |f|
-    f.collection_check_boxes :options, [[true, 'Yes'] ,[false, 'No']], :first, :last
-  end
+    module Padrino
+      module Helpers
+        module FormBuilder
+          class FieldsFormBuilder < AbstractFormBuilder #:nodoc:
+        
+            include **PadrinoFields**::MyCoolOrm if defined?(MyCoolOrm)
 
-  <input name="user[options][]" type="hidden" value="" />
-  <input id="user_options_true" name="user[options][]" type="checkbox" value="true" />
-  <label class="collection_check_box" for="user_options_true">Yes</label>
-  <input name="user[options][]" type="hidden" value="" />
-  <input id="user_options_false" name="user[options][]" type="checkbox" value="false" />
-  <label class="collection_check_box" for="user_options_false">No</label>
+## Todo
 
-== Mappings/Inputs available
+* Add country select
+* Generators for config and views
+* I18n integration
+* More documentation
 
-SimpleForm comes with a lot of default mappings:
+## Bug reports
 
-  Mapping               Input                   Column Type
-
-  boolean               check box               boolean
-  string                text field              string
-  email                 email field             string with name matching "email"
-  url                   url field               string with name matching "url"
-  tel                   tel field               string with name matching "phone"
-  password              password field          string with name matching "password"
-  search                search                  -
-  text                  text area               text
-  file                  file field              string, responding to file methods
-  hidden                hidden field            -
-  integer               number field            integer
-  float                 number field            float
-  decimal               number field            decimal
-  datetime              datetime select         datetime/timestamp
-  date                  date select             date
-  time                  time select             time
-  select                collection select       belongs_to/has_many/has_and_belongs_to_many associations
-  radio                 collection radio        belongs_to
-  check_boxes           collection check box    has_many/has_and_belongs_to_many associations
-  country               country select          string with name matching "country"
-  time_zone             time zone select        string with name matching "time_zone"
-
-== I18n
-
-SimpleForm uses all power of I18n API to lookup labels, hints and placeholders. To customize your forms you can create a locale file like this:
-
-  en:
-    padrino-fields:
-      labels:
-        user:
-          username: 'User name'
-          password: 'Password'
-      hints:
-        user:
-          username: 'User name to sign in.'
-          password: 'No special characters, please.'
-      placeholders:
-        user:
-          username: 'Your username'
-          password: '****'
-
-And your forms will use this information to render the components for you.
-
-SimpleForm also lets you be more specific, separating lookups through actions for labels, hints and placeholders. Let's say you want a different label for new and edit actions, the locale file would be something like:
-
-  en:
-    padrino-fields:
-      labels:
-        user:
-          username: 'User name'
-          password: 'Password'
-          edit:
-            username: 'Change user name'
-            password: 'Change password'
-
-This way SimpleForm will figure out the right translation for you, based on the action being rendered. And to be a little bit DRYer with your locale file, you can skip the model information inside it:
-
-  en:
-    padrino-fields:
-      labels:
-        username: 'User name'
-        password: 'Password'
-      hints:
-        username: 'User name to sign in.'
-        password: 'No special characters, please.'
-      placeholders:
-        username: 'Your username'
-        password: '****'
-
-SimpleForm will always look for a default attribute translation if no specific is found inside the model key. In addition, SimpleForm will fallback to default human_attribute_name from Rails when no other translation is found for labels.
-
-Finally, you can also overwrite any label, hint or placeholder inside your view, just by passing the option manually. This way the I18n lookup will be skipped.
-
-It's also possible to translate buttons, using Rails' built-in I18n support:
-
-  en:
-    helpers:
-      submit:
-        user:
-          create: "Add %{model}"
-          update: "Save Changes"
-
-There are other options that can be configured through I18n API, such as required text and boolean. Be sure to check our locale file or the one copied to your application after you run "rails generate padrino-fields:install".
-
-== Configuration
-
-SimpleForm has several configuration values. You can read and change them in the initializer created by SimpleForm, so if you haven't executed the command below yet, please do:
-
-  rails generate padrino-fields:install
-
-== Custom form builder
-
-You can create a custom form builder that uses SimpleForm.
-
-Create a helper method that calls padrino-fields_for with a custom builder:
-
-  def custom_form_for(object, *args, &block)
-    padrino-fields_for(object, *(args << { :builder => CustomFormBuilder }), &block)
-  end
-
-Create a form builder class that inherits from SimpleForm::FormBuilder.
-
-  class CustomFormBuilder < SimpleForm::FormBuilder
-    def input(attribute_name, *args, &block)
-      super(attribute_name, *(args << { :input_html => { :class => 'custom' } }), &block)
-    end
-  end
-
-=== Bug reports
-
-If you discover any bugs, feel free to create an issue on GitHub. Please add as much information as possible to help us fix the problem. You can be an even bigger help by forking and sending a pull request.
+If you discover any bugs, feel free to create an issue on GitHub. Please add as much information as possible to help us fix the problem. You can be an even bigger help by forking and sending a pull request. Be sure to include tests with your code!
 
 http://github.com/activestylus/padrino-field/issues
 
-== Todo
+## Credit
 
-* ActiveRecord Support
-* I18n integration
-* Generators
-* Add country select
+This gem borrows heavily from the following projects:
+* [Formtastic](http://github.com/justinfrench/formtastic)
+* [**PadrinoFields**](http://github.com/plataformatec/simple_form)
 
-== License
+Many thanks to [Justin French](https://github.com/justinfrench) and [Jose Valim](https://github.com/josevalim) for the inspiration. Extra shouts to [Nathan Esquenazi](https://github.com/nesquena) and [Davide d'Agostino](https://github.com/DAddYE) for lending a hand on the [google group](https://groups.google.com/forum/#!forum/padrino)
+
+## License
 
 MIT License. Copyright 2011 Steven Garcia

@@ -10,12 +10,11 @@ FileSet.glob_require('padrino-fields/**/*.rb', __FILE__)
 # Load our locales
 I18n.load_path += Dir["#{File.dirname(__FILE__)}/padrino-helpers/locale/*.yml"]
 
-module Padrino
+module PadrinoFields
   ##
   # This component provides view helpers and shortcuts for generating form fields
   # Should feel familiar to users of Formtastic or SimpleForm
 
-  module Fields
     ##
     # Register Padrino::Helpers::Fields for Padrino::Application
     #
@@ -28,5 +27,4 @@ module Padrino
       alias :included :registered
     end
             
-  end # Fields
-end # Padrino
+end # PadrinoFields

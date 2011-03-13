@@ -1,9 +1,9 @@
 require 'helper'
 
-class TestOrmWrapper < Test::Unit::TestCase
+class TestDataMapper < Test::Unit::TestCase
 
-  include Padrino::Fields
-  include Padrino::Helpers::FormBuilder::Orm::Datamapper
+  include PadrinoFields
+  include PadrinoFields::DataMapperWrapper
   
   context "for #form_attribute_is_required? method" do
     
@@ -58,6 +58,18 @@ class TestOrmWrapper < Test::Unit::TestCase
         DataMapper::Validations::PrimitiveTypeValidator,
         DataMapper::Validations::PrimitiveTypeValidator,
         DataMapper::Validations::PrimitiveTypeValidator,
+        DataMapper::Validations::LengthValidator,
+        DataMapper::Validations::PrimitiveTypeValidator,
+        DataMapper::Validations::LengthValidator,
+        DataMapper::Validations::PrimitiveTypeValidator,
+        DataMapper::Validations::LengthValidator,
+        DataMapper::Validations::PrimitiveTypeValidator,
+        DataMapper::Validations::LengthValidator,
+        DataMapper::Validations::PrimitiveTypeValidator,
+        DataMapper::Validations::LengthValidator,
+        DataMapper::Validations::PrimitiveTypeValidator,
+        DataMapper::Validations::LengthValidator,
+        DataMapper::Validations::PrimitiveTypeValidator,
         DataMapper::Validations::PresenceValidator
       ]
       assert_equal expected, Person.form_attribute_validators.map(&:class)
@@ -73,14 +85,14 @@ class TestOrmWrapper < Test::Unit::TestCase
     should "return :text for Text columns" do
       assert_equal :text, Person.form_column_type_for(:text)
     end
-    should "return :numeric for Decimal columns" do
-      assert_equal :numeric, Person.form_column_type_for(:decimal)
+    should "return :number for Decimal columns" do
+      assert_equal :number, Person.form_column_type_for(:decimal)
     end            
-    should "return :numeric for Float columns" do
-      assert_equal :numeric, Person.form_column_type_for(:float)
+    should "return :number for Float columns" do
+      assert_equal :number, Person.form_column_type_for(:float)
     end            
-    should "return :numeric for Integer columns" do
-      assert_equal :numeric, Person.form_column_type_for(:integer)
+    should "return :number for Integer columns" do
+      assert_equal :number, Person.form_column_type_for(:integer)
     end            
     should "return :date for Date columns" do
       assert_equal :date, Person.form_column_type_for(:date)
