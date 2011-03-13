@@ -27,22 +27,22 @@ This will generate a form with labels for username and password - supplying the 
 
 ## Available Inputs
 
- Mapping       | Input            | Column Type                          
-:--------------|:-----------------|:-------------------------------------
- **:boolean**  | check box        | boolean                              
- **:string**   | text field       | string                               
- **:email**    | email field      | string with name matching "email"    
- **:url**      | url field        | string with name matching "url"      
- **:tel**      | tel field        | string with name matching "phone"    
- **:password** | password field   | string with name matching "password" 
- **:search**   | search           | string with name matching "search"   
- **:text**     | text area        | text                                 
- **:file**     | file field       | string, responding to file methods   
- **:number**   | number field     | integer, float, decimal              
- **:date**     | date field       | date, datetime, timestamps           
- **:select**   | select           | -                                    
- **:radios**   | radio buttons    | -                                    
- **:checks**   | check boxes      | -                                    
+Mapping       | Input           | Column Type                          
+:-------------|:----------------|:------------------------------------
+**:boolean**  |check box        |boolean                              
+**:string**   |text field       |string                               
+**:email**    |email field      |string with name matching "email"    
+**:url**      |url field        |string with name matching "url"      
+**:tel**      |tel field        |string with name matching "phone"    
+**:password** |password field   |string with name matching "password" 
+**:search**   |search           |string with name matching "search"   
+**:text**     |text area        |text                                 
+**:file**     |file field       |string, responding to file methods   
+**:number**   |number field     |integer, float, decimal              
+**:date**     |date field       |date, datetime, timestamps           
+**:select**   |select           |-                                    
+**:radios**   |radio buttons    |-                                    
+**:checks**   |check boxes      |-                                    
 
 ## Field Customization
 
