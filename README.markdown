@@ -57,7 +57,7 @@ Pass html attribute straight to the input:
     = f.input :password, :input_html => { :maxlength => 20 }
     = f.input :remember_me, :input_html => { :value => '1' }
 
-    ## Available Inputs
+## Available Inputs
 
 Mapping       | Input           | Column Type                          
 :-------------|:----------------|:------------------------------------
