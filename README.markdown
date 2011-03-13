@@ -98,6 +98,8 @@ Use ranges as options for your select tags
 
 Options may also be rendered as **:radios** and **:checks**
 
+    = f.input :user, :options => User.all.map(&:name), :as => :radios
+
 ## Settings
 
 You can override a few default settings by creating a lib file as follows:
