@@ -147,7 +147,7 @@ Require your orm file and include its module as follows:
 
 If you discover any bugs, feel free to create an issue on GitHub. Please add as much information as possible to help us fix the problem. You can be an even bigger help by forking and sending a pull request. Be sure to include tests with your code!
 
-http://github.com/activestylus/padrino-field/issues
+[http://github.com/activestylus/padrino-field/issues](http://github.com/activestylus/padrino-field/issues)
 
 ## Credit
 
