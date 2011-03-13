@@ -25,25 +25,6 @@ The heart of **PadrinoFields** is the **:input** method
 
 This will generate a form with labels for username and password - supplying the appropriate inputs, labels and error messages on missing/invalid fields. **PadrinoFields** looks at your database columns to generate default inputs.
 
-## Available Inputs
-
-Mapping       | Input           | Column Type                          
-:-------------|:----------------|:------------------------------------
-**:boolean**  |check box        |boolean                              
-**:string**   |text field       |string                               
-**:email**    |email field      |string with name matching "email"    
-**:url**      |url field        |string with name matching "url"      
-**:tel**      |tel field        |string with name matching "phone"    
-**:password** |password field   |string with name matching "password" 
-**:search**   |search           |string with name matching "search"   
-**:text**     |text area        |text                                 
-**:file**     |file field       |string, responding to file methods   
-**:number**   |number field     |integer, float, decimal              
-**:date**     |date field       |date, datetime, timestamps           
-**:select**   |select           |-                                    
-**:radios**   |radio buttons    |-                                    
-**:checks**   |check boxes      |-                                    
-
 ## Field Customization
 
 Override the default input type like so:
@@ -68,6 +49,26 @@ Pass html attribute straight to the input:
     = f.input :username, :input_html => { :class => 'special' }
     = f.input :password, :input_html => { :maxlength => 20 }
     = f.input :remember_me, :input_html => { :value => '1' }
+
+    ## Available Inputs
+
+    Mapping       | Input           | Column Type                          
+    :-------------|:----------------|:------------------------------------
+    **:boolean**  |check box        |boolean                              
+    **:string**   |text field       |string                               
+    **:email**    |email field      |string with name matching "email"    
+    **:url**      |url field        |string with name matching "url"      
+    **:tel**      |tel field        |string with name matching "phone"    
+    **:password** |password field   |string with name matching "password" 
+    **:search**   |search           |string with name matching "search"   
+    **:text**     |text area        |text                                 
+    **:file**     |file field       |string, responding to file methods   
+    **:number**   |number field     |integer, float, decimal              
+    **:date**     |date field       |date, datetime, timestamps           
+    **:select**   |select           |-                                    
+    **:radios**   |radio buttons    |-                                    
+    **:checks**   |check boxes      |-                                    
+
 
 ## Validations
 
