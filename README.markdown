@@ -19,7 +19,7 @@ Initialize it in your **app.rb**
 
     register PadrinoFields
     
-    set :default_builder, 'PadrinoFields'
+    set :default_builder, 'PadrinoFieldsBuilder'
 
 ## Usage
 
