@@ -152,6 +152,7 @@ http://github.com/activestylus/padrino-field/issues
 ## Credit
 
 This gem borrows heavily from the following projects:
+
 * [Formtastic](http://github.com/justinfrench/formtastic)
 * [**PadrinoFields**](http://github.com/plataformatec/simple_form)
 
