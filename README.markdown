@@ -156,7 +156,7 @@ If you discover any bugs, feel free to create an issue on GitHub. Please add as 
 This gem borrows heavily from the following projects:
 
 * [Formtastic](http://github.com/justinfrench/formtastic)
-* [**PadrinoFields**](http://github.com/plataformatec/simple_form)
+* [SimpleForm](http://github.com/plataformatec/simple_form)
 
 Many thanks to [Justin French](https://github.com/justinfrench) and [Jose Valim](https://github.com/josevalim) for the inspiration. Extra shouts to [Nathan Esquenazi](https://github.com/nesquena) and [Davide d'Agostino](https://github.com/DAddYE) for lending a hand on the [google group](https://groups.google.com/forum/#!forum/padrino)
 
