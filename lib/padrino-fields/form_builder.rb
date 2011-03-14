@@ -62,16 +62,8 @@ module Padrino
           end
           EOF
         end
-
-        def grouped_options(collection)
-          collection.map do |optgroup|
-            optgroup.map do |option|
-            end
-          end
-        end
-
-        protected
         
+
         def collect_inputs_as(attribute,type,options={})
           options[:options].map do |item|
             collection_input(attribute,type,item,options.keep_if {|key, value| key != :options})

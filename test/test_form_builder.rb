@@ -93,10 +93,17 @@ class TestFormBuilder < Test::Unit::TestCase
       assert_has_tag("input", type:"text", id:"person_name", name:"person[name]") { actual }
     end
 
-    should "return a select field" do
-      actual = field.input(:name, :options => [["Ann",1],["Bob",2]])
+    # should "return a select field" do
+    #   actual = field.input(:name, :options => [["Ann",1],["Bob",2]])
+    #   assert_has_tag("select", id:"person_name", name:"person[name]") { actual }
+    #   assert_has_tag("option", value:"1", content:"Ann") { actual }
+    #   assert_has_tag("option", value:"2", content:"Bob") { actual }
+    # end
+    
+    should "return a select tag with options" do
+      actual = field.input(:name, :options => ["Ann",["Bob",2]])
       assert_has_tag("select", id:"person_name", name:"person[name]") { actual }
-      assert_has_tag("option", value:"1", content:"Ann") { actual }
+      assert_has_tag("option", value:"Ann", content:"Ann") { actual }
       assert_has_tag("option", value:"2", content:"Bob") { actual }
     end
 
@@ -145,7 +152,6 @@ class TestFormBuilder < Test::Unit::TestCase
       actual = field.input(:string, :as => :file)
       assert_has_tag("input", :type => "file") { actual }
     end
-    
   end
   
   context "#setup_label" do
