@@ -49,13 +49,27 @@ Disable labels, hints or errors:
 
     = f.input :username, :caption => false
     = f.input :password, :hint => false
-    = f.input :email, :disabled => true
+    = f.input :email,    :disabled => true
 
 Pass html attribute straight to the input:
 
-    = f.input :username, :input_html => { :class => 'special' }
-    = f.input :password, :input_html => { :maxlength => 20 }
+    = f.input :username,    :input_html => { :class => 'special' }
+    = f.input :password,    :input_html => { :maxlength => 20 }
     = f.input :remember_me, :input_html => { :value => '1' }
+
+### Options / Collections
+
+Options can be arrays or ranges, and when a **:options** is given the **:select** input will be rendered by default, so we don't need to pass the **:as => :select** option. 
+
+    = f.input :user, :options => User.all.map(&:name)
+
+Use ranges as options for your select tags
+
+    = f.input :year, :options => (1950..Time.now.year)
+
+Options may also be rendered as **:radios** and **:checks**
+
+    = f.input :user, :options => User.all.map(&:name), :as => :radios
 
 ### Available Inputs
 
@@ -93,20 +107,6 @@ By default all inputs are optional. **PadrinoFields** looks at your model valida
 You can also do it manually with the **:required** option
 
     = f.input :email, :required => true
-
-### Options / Collections
-
-Options can be arrays or ranges, and when a **:options** is given the **:select** input will be rendered by default, so we don't need to pass the **:as => :select** option. 
-
-    = f.input :user, :options => User.all.map(&:name)
-
-Use ranges as options for your select tags
-
-    = f.input :year, :options => (1950..Time.now.year)
-
-Options may also be rendered as **:radios** and **:checks**
-
-    = f.input :user, :options => User.all.map(&:name), :as => :radios
 
 ### Settings
 

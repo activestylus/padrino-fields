@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{padrino-fields}
-  s.version = "0.1.0"
+  s.version = "0.2.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Steven Garcia"]
-  s.date = %q{2011-03-13}
+  s.date = %q{2011-03-14}
   s.description = %q{Smart fields for your forms, similar to Formtastic or SimpleForm}
   s.email = %q{stevendgarcia@gmail.com}
   s.extra_rdoc_files = [
@@ -30,6 +30,7 @@ Gem::Specification.new do |s|
     "lib/padrino-fields/orms/datamapper.rb",
     "lib/padrino-fields/settings.rb",
     "load_paths.rb",
+    "padrino-fields.gemspec",
     "test/.DS_Store",
     "test/fixtures/datamapper/app.rb",
     "test/fixtures/datamapper/views/capture_concat.erb",
