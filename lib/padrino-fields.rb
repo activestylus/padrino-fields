@@ -20,7 +20,7 @@ module PadrinoFields
     #
     class << self
       def registered(app)
-        app.set :default_builder, 'StandardFormBuilder'
+        app.set :default_builder, 'PadrinoFieldsBuilder'
         app.helpers Padrino::Helpers::FormBuilder::PadrinoFieldsBuilder
         rescue
       end
