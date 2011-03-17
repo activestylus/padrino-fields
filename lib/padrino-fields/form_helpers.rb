@@ -35,7 +35,7 @@ module Padrino
 
       def grouped_options_for_select(collection,selected=nil)
         if collection.is_a?(Hash)
-          collection.each.map do |key, value|
+          collection.map do |key, value|
             content_tag :optgroup, :label => key do
               options_for_select(value, selected)
             end

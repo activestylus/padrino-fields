@@ -92,26 +92,33 @@ class TestFormBuilder < Test::Unit::TestCase
       actual = field.input(:name)
       assert_has_tag("input", type:"text", id:"person_name", name:"person[name]") { actual }
     end
-
-    # should "return a select field" do
-    #   actual = field.input(:name, :options => [["Ann",1],["Bob",2]])
-    #   assert_has_tag("select", id:"person_name", name:"person[name]") { actual }
-    #   assert_has_tag("option", value:"1", content:"Ann") { actual }
-    #   assert_has_tag("option", value:"2", content:"Bob") { actual }
-    # end
     
-    should "return a select tag with options" do
+    should "return a select field with options" do
       actual = field.input(:name, :options => ["Ann",["Bob",2]])
       assert_has_tag("select", id:"person_name", name:"person[name]") { actual }
       assert_has_tag("option", value:"Ann", content:"Ann") { actual }
       assert_has_tag("option", value:"2", content:"Bob") { actual }
+    end
+    
+    should "return a select field with grouped options" do
+      opts = {
+        "Friends" => ["Yoda",["Obiwan",2]],
+        "Enemies" => ["Palpatine",['Darth Vader',3]]
+      }
+      actual = field.input( :name, :grouped_options => opts )
+      assert_has_tag("select", name:"person[name]") { actual }
+      assert_has_tag("optgroup", label:"Friends") { actual }
+      assert_has_tag("option", value:"Yoda", content:"Yoda") { actual }
+      assert_has_tag("option", value:"2", content:"Obiwan") { actual }
+      assert_has_tag("optgroup", label:"Enemies") { actual }
+      assert_has_tag("option", value:"Palpatine", content:"Palpatine") { actual }
+      assert_has_tag("option", value:"3", content:"Darth Vader") { actual }
     end
 
     should "return a collection of checkboxes" do
       actual = field.input(:string, :options => ["Ann","Bob"], :as => :checks)
       assert_has_tag("label", :class => "checks", :for => "person_string_ann", content:"Ann") { actual }
       assert_has_tag("input", type:"checkbox", value:"Ann", id:"person_string_ann", name:"person[string][]") { actual }
-      assert_has_tag("input", type:"hidden", name:"person[string][]", value:"0") { actual }
       assert_has_tag("label", :class => "checks", :for => "person_string_bob", content:"Bob") { actual }
       assert_has_tag("input", type:"checkbox", value:"Bob", id:"person_string_bob", name:"person[string][]") { actual }
       assert_has_tag("input", type:"hidden", name:"person[string][]", value:"0") { actual }

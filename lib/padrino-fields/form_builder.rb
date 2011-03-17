@@ -35,14 +35,14 @@ module Padrino
         
         def default_input(attribute,type,options={})
           input_options = options.keep_if {|key, value| key != :as}
-          if options[:options].nil?
-            singular_input_for(attribute,type,options)
-          elsif type==:radios
-            collect_inputs_as(attribute,:radios,input_options)
-          elsif type==:checks
-            collect_inputs_as(attribute,:checks,input_options)
+          if options[:options] || options[:grouped_options]
+            if type==:radios || type == :checks
+              collect_inputs_as(attribute,type,input_options)
+            else
+              select(attribute,input_options)
+            end
           else
-            select(attribute,input_options)
+            singular_input_for(attribute,type,options)
           end
         end
         
