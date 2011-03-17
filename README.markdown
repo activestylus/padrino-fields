@@ -71,6 +71,22 @@ Options may also be rendered as **:radios** and **:checks**
 
     = f.input :user, :options => User.all.map(&:name), :as => :radios
 
+You can produce optgroups using **:grouped_options**
+
+    # Using a Hash
+    options = {
+      "Friends" => ["Yoda","Obiwan"],
+      "Enemies" => ["Palpatine","Darth Vader"]
+    }
+    
+    # Using an Array
+    options = [
+      ["Friends",["Yoda","Obiwan"],
+      ["Enemies", ["Palpatine","Darth Vader"]]
+    ]
+    
+    = f.input :user, :grouped_options => options
+
 ### Available Inputs
 
 Mapping       | Input           | Column Type                          
