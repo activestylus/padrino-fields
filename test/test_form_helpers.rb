@@ -14,12 +14,20 @@ class TestFormHelper < Test::Unit::TestCase
     end
     
     context '#select_tag' do
-      should "return a select tag with grouped options for an nested array" do
-        opts = [
+      
+      setup do
+        @hash_options  = {
+          "Friends" => ["Yoda",["Obiwan",2]],
+          "Enemies" => ["Palpatine",['Darth Vader',3]]
+        }
+        @array_options = [
           ["Friends",["Yoda",["Obiwan",2]]],
           ["Enemies", ["Palpatine",['Darth Vader',3]]]
         ]
-        actual = select_tag( 'name', :grouped_options => opts )
+      end
+      
+      should "return a select tag with grouped options for an nested array" do
+        actual = select_tag( 'name', :grouped_options => @array_options )
         assert_has_tag("select", name:"name") { actual }
         assert_has_tag("optgroup", label:"Friends") { actual }
         assert_has_tag("option", value:"Yoda", content:"Yoda") { actual }
@@ -30,11 +38,8 @@ class TestFormHelper < Test::Unit::TestCase
       end
       
       should "return a select tag with grouped options for a hash" do
-        opts = {
-          "Friends" => ["Yoda",["Obiwan",2]],
-          "Enemies" => ["Palpatine",['Darth Vader',3]]
-        }
-        actual = select_tag( 'name', :grouped_options => opts )
+        
+        actual = select_tag( 'name', :grouped_options => @hash_options )
         assert_has_tag("select", name:"name") { actual }
         assert_has_tag("optgroup", label:"Friends") { actual }
         assert_has_tag("option", value:"Yoda", content:"Yoda") { actual }
@@ -43,6 +48,12 @@ class TestFormHelper < Test::Unit::TestCase
         assert_has_tag("option", value:"Palpatine", content:"Palpatine") { actual }
         assert_has_tag("option", value:"3", content:"Darth Vader") { actual }
       end
+      
+      should "return a select tag with blank option for grouped_options" do
+        actual = select_tag( 'name', :grouped_options => @hash_options, :include_blank => 'Choose' )
+        assert_has_tag("option", value:"", content:"Choose") { actual }
+      end
+      
     end
   
 end
