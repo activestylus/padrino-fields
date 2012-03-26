@@ -1,6 +1,7 @@
 require 'padrino-helpers'
 require File.expand_path(File.dirname(__FILE__) + '/form_helpers')
 require File.expand_path(File.dirname(__FILE__) + '/orms/datamapper') if defined?(DataMapper)
+require File.expand_path(File.dirname(__FILE__) + '/orms/active_record') if defined?(ActiveRecord)
 require File.expand_path(File.dirname(__FILE__) + '/settings')
 
 module Padrino
@@ -10,6 +11,7 @@ module Padrino
         
         include PadrinoFields::Settings
         include PadrinoFields::DataMapperWrapper if defined?(DataMapper)
+        include PadrinoFields::ActiveRecordWrapper if defined?(ActiveRecord)
         
         @@settings = PadrinoFields::Settings
         
