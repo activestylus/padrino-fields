@@ -20,18 +20,26 @@ module Padrino
         def input(attribute, options={})
           options.reverse_merge!(:caption => options.delete(:caption)) if options[:caption]
           type = options[:as] || klazz.form_column_type_for(attribute)
-          field_html =  ""
-          if type == :boolean || options[:as] == :boolean
+          label_html, field_html = "", ""
+          if type == :boolean || options[:as] == :boolean && !@@settings.control_container
             field_html << default_input(attribute,type,options) 
             field_html << setup_label(attribute,type,labelize(options))
           else
-            field_html << setup_label(attribute,type,labelize(options))
+            label_html << setup_label(attribute,type,labelize(options))
             field_html << default_input(attribute,type, options)
           end
           field_html << hint(options[:hint]) if options[:hint]
-          field_html << @template.error_message_on(@object,attribute,{}) if @object.errors.any?
-          @template.content_tag(@@settings.container, :class => css_class(attribute,type,options[:disabled])) do
-            field_html
+          field_html << @template.error_message_on(@object,attribute,@@settings.error_message_options) if @object.errors.any?
+          
+          if @@settings.control_container
+            field_html = @template.content_tag(@@settings.control_container, :class => @@settings.control_container_class) do
+              field_html
+            end
+          end
+          
+          @template.content_tag(@@settings.container, :class => 
+               "#{@@settings.container_class} #{css_class(attribute,type,options[:disabled], @object.errors[attribute].any?)}") do
+            label_html + field_html
           end
         end
         
@@ -138,14 +146,16 @@ module Padrino
           text << marker if required?(attribute) && @@settings.label_required_marker_position == :prepend
           text << field_human_name(attribute)
           text << marker if required?(attribute) && @@settings.label_required_marker_position == :append
-          options.reverse_merge!(:caption => text, :class => css_class(attribute,type,options[:disabled]))
+          options.reverse_merge!(:caption => text, :class => 
+             "#{@@settings.label_class} #{css_class(attribute,type,options[:disabled])}")
           @template.label_tag(field_id(attribute), options)
         end
         
-        def css_class(attribute,type,disabled=false)
+        def css_class(attribute,type,disabled=false,error=false)
           klass = type.to_s
           klass << ' required' if required?(attribute)
-          klass << ' required' if disabled
+          klass << ' disabled' if disabled
+          klass << ' error'    if error
           klass
         end
         
@@ -166,7 +176,7 @@ module Padrino
         end
         
         def hint(text)
-          @template.content_tag(:span, :class=>'hint') { text }
+          @template.content_tag(@@settings.hint_container, :class => @@settings.hint_container_class) { text }
         end
         
         def default_radios(attribute,type,options)
