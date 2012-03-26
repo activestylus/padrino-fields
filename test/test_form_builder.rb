@@ -116,20 +116,20 @@ class TestFormBuilder < Test::Unit::TestCase
     end
 
     should "return a collection of checkboxes" do
-      actual = field.input(:string, :options => ["Ann","Bob"], :as => :checks)
-      assert_has_tag("label", :class => "checks", :for => "person_string_ann", content:"Ann") { actual }
+      actual = field.input(:string, :options => ["Ann","Bob"], :as => :checkboxes)
+      assert_has_tag("label", :class => "checkboxes", :for => "person_string_ann", content:"Ann") { actual }
       assert_has_tag("input", type:"checkbox", value:"Ann", id:"person_string_ann", name:"person[string][]") { actual }
-      assert_has_tag("label", :class => "checks", :for => "person_string_bob", content:"Bob") { actual }
+      assert_has_tag("label", :class => "checkboxes", :for => "person_string_bob", content:"Bob") { actual }
       assert_has_tag("input", type:"checkbox", value:"Bob", id:"person_string_bob", name:"person[string][]") { actual }
       assert_has_tag("input", type:"hidden", name:"person[string][]", value:"0") { actual }
     end
     
     should "return a collection of checkboxes using a multi-dimensional array" do
-      actual = field.input(:string, :options => [["Ann",1],["Bob",2]], :as => :checks)
-      assert_has_tag("label", :class => "checks", :for => "person_string_ann", content:"Ann") { actual }
+      actual = field.input(:string, :options => [["Ann",1],["Bob",2]], :as => :checkboxes)
+      assert_has_tag("label", :class => "checkboxes", :for => "person_string_ann", content:"Ann") { actual }
       assert_has_tag("input", type:"checkbox", value:"1", id:"person_string_ann", name:"person[string][]") { actual }
       assert_has_tag("input", type:"hidden", name:"person[string][]", value:"0") { actual }
-      assert_has_tag("label", :class => "checks", :for => "person_string_bob", content:"Bob") { actual }
+      assert_has_tag("label", :class => "checkboxes", :for => "person_string_bob", content:"Bob") { actual }
       assert_has_tag("input", type:"checkbox", value:"2", id:"person_string_bob", name:"person[string][]") { actual }
       assert_has_tag("input", type:"hidden", name:"person[string][]", value:"0") { actual }
     end

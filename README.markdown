@@ -72,7 +72,7 @@ Use ranges as options for your select tags
 
     = f.input :year, :options => (1950..Time.now.year)
 
-Options may also be rendered as **:radios** and **:checks**
+Options may also be rendered as **:radios** and **:checkboxes**
 
     = f.input :user, :options => User.all.map(&:name), :as => :radios
 
@@ -109,7 +109,7 @@ Mapping       | Input           | Column Type
 **:date**     |date field       |date, datetime, timestamps           
 **:select**   |select           |-                                    
 **:radios**   |radio buttons    |-                                    
-**:checks**   |check boxes      |-                                    
+**:checkboxes**   |check boxes      |-                                    
 
 
 ### Validations

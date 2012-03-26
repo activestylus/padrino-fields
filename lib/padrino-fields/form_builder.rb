@@ -46,7 +46,7 @@ module Padrino
         def default_input(attribute,type,options={})
           input_options = options.keep_if {|key, value| key != :as}
           if options[:options] || options[:grouped_options]
-            if type==:radios || type == :checks
+            if type==:radios || type == :checkboxes
               collect_inputs_as(attribute,type,input_options)
             else
               select(attribute,input_options)
@@ -117,8 +117,8 @@ module Padrino
           unchecked_value = options.delete(:uncheck_value) || '0'
           options.reverse_merge!(:id => field_id(attribute), :value => '1')
           options.reverse_merge!(:checked => true) if values_matches_field?(attribute, options[:value])
-          klass =  css_class(attribute,type,options[:disabled])
-          name  =  type == :checks ? field_name(attribute) + '[]' : field_name(attribute)
+          klass =  css_class(attribute, type.to_s.singularize, options[:disabled])
+          name  =  type == :checkboxes ? field_name(attribute) + '[]' : field_name(attribute)
           if item.is_a?(Array)
             text, value = item[0], item[1]
           else
@@ -126,7 +126,7 @@ module Padrino
           end
           id = field_id(attribute) + "_" + domize(text)
           opts = html_options(attribute,type,options.merge(:id => id, :class => klass, :value => value))
-          if type == :checks
+          if type == :checkboxes
             html = @template.hidden_field_tag(options[:name] || name, :value => unchecked_value, :id => nil)
             input_item = @template.check_box_tag(name, opts)
           else
