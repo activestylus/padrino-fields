@@ -21,7 +21,7 @@ module Padrino
           options.reverse_merge!(:caption => options.delete(:caption)) if options[:caption]
           type = options[:as] || klazz.form_column_type_for(attribute)
           label_html, field_html = "", ""
-          if type == :boolean || options[:as] == :boolean && !@@settings.control_container
+          if (type == :boolean || options[:as] == :boolean) && !@@settings.control_container
             field_html << default_input(attribute,type,options) 
             field_html << setup_label(attribute,type,labelize(options))
           else
