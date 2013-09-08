@@ -5,7 +5,7 @@ require 'cgi'
 require 'i18n'
 require 'enumerator'
 
-FileSet.glob_require('padrino-fields/**/*.rb', __FILE__)
+FileSet.glob_require('padrino-fields/*.rb', __FILE__)
 
 # Load our locales
 I18n.load_path += Dir["#{File.dirname(__FILE__)}/padrino-helpers/locale/*.yml"]

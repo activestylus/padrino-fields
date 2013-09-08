@@ -2,7 +2,10 @@
 
 Forms made easy for the **[Padrino Framework](http://www.padrinorb.com)**
 
-Takes the pain out of building forms. Generates inputs, labels and field hints with a minimal and flexible DSL. Currently only supports **[DataMapper](http://datamapper.org/)**, but plugging more ORMs in will be trivial due to modular design (See below)
+Takes the pain out of building forms. Generates inputs, labels and field hints with a minimal and flexible DSL.
+Currently only supports **[DataMapper](http://datamapper.org/)** and
+**[ActiveRecord](http://api.rubyonrails.org/classes/ActiveRecord/Base.html)**, but plugging more ORMs in will
+be trivial due to modular design (see below).
 
 ## Installation
 
@@ -30,7 +33,8 @@ The heart of **PadrinoFields** is the **:input** method
       = f.input :password
       = f.submit
 
-This will generate a form with labels for username and password - supplying the appropriate inputs, labels and error messages on missing/invalid fields. **PadrinoFields** looks at your database columns to generate default inputs.
+This will generate a form with labels for username and password - supplying the appropriate inputs, labels and error
+messages on missing/invalid fields. **PadrinoFields** looks at your database columns to generate default inputs.
 
 ### Field Customization
 
@@ -59,7 +63,8 @@ Pass html attribute straight to the input:
 
 ### Options / Collections
 
-Options can be arrays or ranges, and when a **:options** is given the **:select** input will be rendered by default, so we don't need to pass the **:as => :select** option. 
+Options can be arrays or ranges, and when a **:options** is given the **:select** input will be rendered by default,
+so we don't need to pass the **:as => :select** option. 
 
     = f.input :user, :options => User.all.map(&:name)
 
@@ -67,7 +72,7 @@ Use ranges as options for your select tags
 
     = f.input :year, :options => (1950..Time.now.year)
 
-Options may also be rendered as **:radios** and **:checks**
+Options may also be rendered as **:radios** and **:checkboxes**
 
     = f.input :user, :options => User.all.map(&:name), :as => :radios
 
@@ -104,12 +109,13 @@ Mapping       | Input           | Column Type
 **:date**     |date field       |date, datetime, timestamps           
 **:select**   |select           |-                                    
 **:radios**   |radio buttons    |-                                    
-**:checks**   |check boxes      |-                                    
+**:checkboxes**   |check boxes      |-                                    
 
 
 ### Validations
 
-By default all inputs are optional. **PadrinoFields** looks at your model validations to see if a field's presence is required and will mark it by prepending a * to the label. 
+By default all inputs are optional. **PadrinoFields** looks at your model validations to see if a field's presence is
+required and will mark it by prepending a * to the label. 
 
     # app/models/person.rb
     class Person
@@ -123,6 +129,9 @@ By default all inputs are optional. **PadrinoFields** looks at your model valida
 You can also do it manually with the **:required** option
 
     = f.input :email, :required => true
+
+Note that if you use ActiveRecord, you will need to include `gem 'validation_reflection'` in your Gemfile
+in order for this feature to work.
 
 ### Settings
 
@@ -144,7 +153,8 @@ You can override a few default settings by creating a lib file as follows:
 
 ## ORM Support
 
-So far only Datamapper is supported, but since the code is decoupled it should be relatively easy to support others:
+So far only Datamapper and ActiveRecord are supported, but since the code is decoupled it
+should be relatively easy to support others:
 
 1. Clone **padrino-fields/orms/datamapper.rb** and extend your ORM in a similar fashion
 2. Clone **test/fixtures/datamapper** and substitute the models with your ORM

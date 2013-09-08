@@ -1,6 +1,7 @@
 require 'padrino-helpers'
 require File.expand_path(File.dirname(__FILE__) + '/form_helpers')
 require File.expand_path(File.dirname(__FILE__) + '/orms/datamapper') if defined?(DataMapper)
+require File.expand_path(File.dirname(__FILE__) + '/orms/active_record') if defined?(ActiveRecord)
 require File.expand_path(File.dirname(__FILE__) + '/settings')
 
 module Padrino
@@ -10,6 +11,7 @@ module Padrino
         
         include PadrinoFields::Settings
         include PadrinoFields::DataMapperWrapper if defined?(DataMapper)
+        include PadrinoFields::ActiveRecordWrapper if defined?(ActiveRecord)
         
         @@settings = PadrinoFields::Settings
         
@@ -18,25 +20,33 @@ module Padrino
         def input(attribute, options={})
           options.reverse_merge!(:caption => options.delete(:caption)) if options[:caption]
           type = options[:as] || klazz.form_column_type_for(attribute)
-          field_html =  ""
-          if type == :boolean || options[:as] == :boolean
+          label_html, field_html = "", ""
+          if (type == :boolean || options[:as] == :boolean) && !@@settings.control_container
             field_html << default_input(attribute,type,options) 
             field_html << setup_label(attribute,type,labelize(options))
           else
-            field_html << setup_label(attribute,type,labelize(options))
+            label_html << setup_label(attribute,type,labelize(options))
             field_html << default_input(attribute,type, options)
           end
           field_html << hint(options[:hint]) if options[:hint]
-          field_html << @template.error_message_on(@object,attribute,{}) if @object.errors.any?
-          @template.content_tag(@@settings.container, :class => css_class(attribute,type,options[:disabled])) do
-            field_html
+          field_html << @template.error_message_on(@object,attribute,@@settings.error_message_options) if @object.errors.any?
+          
+          if @@settings.control_container
+            field_html = @template.content_tag(@@settings.control_container, :class => @@settings.control_container_class) do
+              field_html
+            end
+          end
+          
+          @template.content_tag(@@settings.container, :class => 
+               "#{@@settings.container_class} #{css_class(attribute,type,options[:disabled], @object.errors[attribute].any?)}") do
+            label_html + field_html
           end
         end
         
         def default_input(attribute,type,options={})
           input_options = options.keep_if {|key, value| key != :as}
           if options[:options] || options[:grouped_options]
-            if type==:radios || type == :checks
+            if type==:radios || type == :checkboxes
               collect_inputs_as(attribute,type,input_options)
             else
               select(attribute,input_options)
@@ -107,8 +117,8 @@ module Padrino
           unchecked_value = options.delete(:uncheck_value) || '0'
           options.reverse_merge!(:id => field_id(attribute), :value => '1')
           options.reverse_merge!(:checked => true) if values_matches_field?(attribute, options[:value])
-          klass =  css_class(attribute,type,options[:disabled])
-          name  =  type == :checks ? field_name(attribute) + '[]' : field_name(attribute)
+          klass =  css_class(attribute, type.to_s.singularize, options[:disabled])
+          name  =  type == :checkboxes ? field_name(attribute) + '[]' : field_name(attribute)
           if item.is_a?(Array)
             text, value = item[0], item[1]
           else
@@ -116,7 +126,7 @@ module Padrino
           end
           id = field_id(attribute) + "_" + domize(text)
           opts = html_options(attribute,type,options.merge(:id => id, :class => klass, :value => value))
-          if type == :checks
+          if type == :checkboxes
             html = @template.hidden_field_tag(options[:name] || name, :value => unchecked_value, :id => nil)
             input_item = @template.check_box_tag(name, opts)
           else
@@ -136,14 +146,16 @@ module Padrino
           text << marker if required?(attribute) && @@settings.label_required_marker_position == :prepend
           text << field_human_name(attribute)
           text << marker if required?(attribute) && @@settings.label_required_marker_position == :append
-          options.reverse_merge!(:caption => text, :class => css_class(attribute,type,options[:disabled]))
+          options.reverse_merge!(:caption => text, :class => 
+             "#{@@settings.label_class} #{css_class(attribute,type,options[:disabled])}")
           @template.label_tag(field_id(attribute), options)
         end
         
-        def css_class(attribute,type,disabled=false)
+        def css_class(attribute,type,disabled=false,error=false)
           klass = type.to_s
           klass << ' required' if required?(attribute)
-          klass << ' required' if disabled
+          klass << ' disabled' if disabled
+          klass << ' error'    if error
           klass
         end
         
@@ -164,7 +176,7 @@ module Padrino
         end
         
         def hint(text)
-          @template.content_tag(:span, :class=>'hint') { text }
+          @template.content_tag(@@settings.hint_container, :class => @@settings.hint_container_class) { text }
         end
         
         def default_radios(attribute,type,options)
